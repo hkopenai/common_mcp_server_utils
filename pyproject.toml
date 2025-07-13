@@ -1,22 +1,21 @@
 [project]
-name = "hkopenai.common_mcp_server_utils"
+name = "hkopenai_common"
 version = "0.1.2"
 description = "Common utilities for HK OpenAI MCP Servers"
-readme = "README.md"
 requires-python = ">=3.9"
 keywords = [ "mcp", "server", "utilities",]
 classifiers = [ "Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent",]
-[[project.authors]]
-name = "Your Name"
-email = "your.email@example.com"
+authors = [
+    {name = "Neo Chow", email = "neo@01man.com"}
+]
 
 [build-system]
 requires = [ "setuptools>=61.0",]
 build-backend = "setuptools.build_meta"
 
 [project.urls]
-Homepage = "https://github.com/your_org/hkopenai"
-"Bug Tracker" = "https://github.com/your_org/hkopenai/issues"
+Homepage = "https://github.com/hkopenai/hkopenai_common"
+"Bug Tracker" = "https://github.com/hkopenai/hkopenai_common/issues"
 
 [project.optional-dependencies]
 dev = [ "pytest>=7.0", "pytest-mock",]
@@ -29,10 +28,10 @@ pythonpath = [ ".", "../..",]
 
 [tool.setuptools.packages.find]
 where = [ "..",]
-include = [ "hkopenai.common_mcp_server_utils*",]
+include = [ "hkopenai_common*",]
 
 [tool.hatch.build.targets.sdist]
-packages = [ "hkopenai/common_mcp_server_utils",]
+packages = [ "hkopenai_common",]
 
 [tool.hatch.build.targets.wheel]
-packages = [ "hkopenai/common_mcp_server_utils",]
+packages = [ "hkopenai_common",]
