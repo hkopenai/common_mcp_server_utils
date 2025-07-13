@@ -1,45 +1,38 @@
 [project]
 name = "hkopenai.common_mcp_server_utils"
-version = "0.1.0"
+version = "0.1.2"
 description = "Common utilities for HK OpenAI MCP Servers"
-authors = [
-    { name = "Your Name", email = "your.email@example.com" },
-]
 readme = "README.md"
 requires-python = ">=3.9"
-keywords = ["mcp", "server", "utilities"]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
-
-[project.urls]
-"Homepage" = "https://github.com/your_org/hkopenai"
-"Bug Tracker" = "https://github.com/your_org/hkopenai/issues"
+keywords = [ "mcp", "server", "utilities",]
+classifiers = [ "Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent",]
+[[project.authors]]
+name = "Your Name"
+email = "your.email@example.com"
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = [ "setuptools>=61.0",]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-where = [".."] # Search for packages in the parent directory (hkopenai)
-include = ["hkopenai.common_mcp_server_utils*"]
-
-[tool.pytest.ini_options]
-pythonpath = [".", "../.."]
-
-[tool.hatch.build.targets.sdist]
-packages = ["hkopenai/common_mcp_server_utils"]
-
-[tool.hatch.build.targets.wheel]
-packages = ["hkopenai/common_mcp_server_utils"]
-
-[tool.setuptools.package-data]
-"hkopenai.common_mcp_server_utils" = ["py.typed"]
+[project.urls]
+Homepage = "https://github.com/your_org/hkopenai"
+"Bug Tracker" = "https://github.com/your_org/hkopenai/issues"
 
 [project.optional-dependencies]
-dev = [
-    "pytest>=7.0",
-    "pytest-mock",
-]
+dev = [ "pytest>=7.0", "pytest-mock",]
+
+[tool.setuptools.package-data]
+"hkopenai.common_mcp_server_utils" = [ "py.typed",]
+
+[tool.pytest.ini_options]
+pythonpath = [ ".", "../..",]
+
+[tool.setuptools.packages.find]
+where = [ "..",]
+include = [ "hkopenai.common_mcp_server_utils*",]
+
+[tool.hatch.build.targets.sdist]
+packages = [ "hkopenai/common_mcp_server_utils",]
+
+[tool.hatch.build.targets.wheel]
+packages = [ "hkopenai/common_mcp_server_utils",]
