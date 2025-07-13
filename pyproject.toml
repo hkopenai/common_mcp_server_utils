@@ -1,6 +1,6 @@
 [project]
 name = "hkopenai.common_mcp_server_utils"
-version = "0.1.1"
+version = "0.1.2"
 description = "Common utilities for HK OpenAI MCP Servers"
 readme = "README.md"
 requires-python = ">=3.9"
