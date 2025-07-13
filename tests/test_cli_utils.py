@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import Mock, patch
 import os
-from hkopenai.common_mcp_server_utils.cli_utils import cli_main
+from hkopenai_common.cli_utils import cli_main
 
 @pytest.fixture(autouse=True)
 def cleanup_env_vars():
