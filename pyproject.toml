@@ -1,6 +1,6 @@
 [project]
 name = "hkopenai_common"
-version = "0.1.7"
+version = "0.1.8"
 description = "Common utilities for HK OpenAI MCP Servers"
 requires-python = ">=3.9"
 keywords = [ "mcp", "server", "utilities",]
