@@ -1,6 +1,6 @@
 [project]
 name = "hkopenai_common"
-version = "0.1.4"
+version = "0.1.5"
 description = "Common utilities for HK OpenAI MCP Servers"
 requires-python = ">=3.9"
 keywords = [ "mcp", "server", "utilities",]
@@ -24,5 +24,5 @@ dev = [ "pytest>=7.0", "pytest-mock",]
 pythonpath = [ ".", "../..",]
 
 [tool.setuptools.packages.find]
-where = [ "."]
-include = [ "hkopenai_common"]
+where = [ ".",]
+include = [ "hkopenai_common",]
