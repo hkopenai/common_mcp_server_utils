@@ -20,18 +20,9 @@ Homepage = "https://github.com/hkopenai/hkopenai_common"
 [project.optional-dependencies]
 dev = [ "pytest>=7.0", "pytest-mock",]
 
-[tool.setuptools.package-data]
-"hkopenai.common_mcp_server_utils" = [ "py.typed",]
-
 [tool.pytest.ini_options]
 pythonpath = [ ".", "../..",]
 
 [tool.setuptools.packages.find]
-where = [ "..",]
-include = [ "hkopenai_common*",]
-
-[tool.hatch.build.targets.sdist]
-packages = [ "hkopenai_common",]
-
-[tool.hatch.build.targets.wheel]
-packages = [ "hkopenai_common",]
+where = [ "."]
+include = [ "hkopenai_common"]
