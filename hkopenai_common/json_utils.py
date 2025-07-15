@@ -1,7 +1,14 @@
 import requests
+import json
 from typing import Dict, Any, Optional
 
-def fetch_json_data(url: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+def fetch_json_data(
+    url: str,
+    params: Optional[Dict[str, Any]] = None,
+    headers: Optional[Dict[str, str]] = None,
+    timeout: Optional[int] = None,
+    encoding: str = "utf-8",
+) -> Dict[str, Any]:
     """
     Fetches JSON data from a given URL with optional parameters.
 
@@ -13,17 +20,29 @@ def fetch_json_data(url: str, params: Optional[Dict[str, Any]] = None) -> Dict[s
         A dictionary containing the JSON response, or an error message.
     """
     try:
-        response = requests.get(url, params=params)
+        response = requests.get(url, params=params, headers=headers, timeout=timeout)
         response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
         try:
             return response.json()
-        except ValueError:
-            return {
-                "error": (
-                    "Failed to parse JSON response from API. "
-                    "The API might have returned non-JSON data or an empty response."
-                )
-            }
+        except ValueError as e:
+            # If response.json() fails, try manual decoding with BOM stripping
+            try:
+                content = response.content.decode(encoding).lstrip('\ufeff')
+                return json.loads(content)
+            except UnicodeDecodeError as decode_err:
+                return {
+                    "error": (
+                        f"UnicodeDecodeError: Failed to decode content with encoding {encoding}: {decode_err}. "
+                        "Try a different encoding."
+                    )
+                }
+            except ValueError:
+                return {
+                    "error": (
+                        "Failed to parse JSON response from API. "
+                        "The API might have returned non-JSON data or an empty response."
+                    )
+                }
     except requests.exceptions.HTTPError as http_err:
         return {
             "error": (
