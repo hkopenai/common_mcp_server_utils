@@ -33,11 +33,8 @@ class TestXmlUtils:
         result = fetch_xml_from_url(url)
 
         mock_get.assert_called_once_with(url)
-        # Parse the expected content to an ElementTree object and then convert to string for comparison
-        expected_root = ET.fromstring(self.sample_xml_content)
-        assert ET.tostring(result, encoding="unicode") == ET.tostring(
-            expected_root, encoding="unicode"
-        )
+        expected_dict = {"data": {"item": ["value1", "value2"]}}
+        assert result == expected_dict
 
     @patch("requests.get")
     def test_fetch_xml_from_url_http_error(self, mock_get):
