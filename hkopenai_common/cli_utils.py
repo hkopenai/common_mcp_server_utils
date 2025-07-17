@@ -47,4 +47,8 @@ def cli_main(server_main_func, description, args_list=None):
             except ValueError:
                 pass  # Keep the default or command-line value if env var is invalid
 
-    server_main_func(host=host_final, port=port_final, sse=sse_final)
+    server = server_main_func()
+    if sse_final:
+        server.run(transport="streamable-http", host=host_final, port=port_final)
+    else:
+        server.run()
