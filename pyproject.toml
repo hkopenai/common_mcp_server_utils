@@ -20,7 +20,7 @@ Homepage = "https://github.com/hkopenai/hkopenai_common"
 "Bug Tracker" = "https://github.com/hkopenai/hkopenai_common/issues"
 
 [project.optional-dependencies]
-dev = [ "pytest>=7.0", "pytest-mock",]
+dev = [ "pytest>=7.0", "pytest-mock", "requests>=2.31.0",]
 
 [tool.pytest.ini_options]
 pythonpath = [ ".", "../..",]
