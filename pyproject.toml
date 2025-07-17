@@ -5,7 +5,7 @@ description = "Common utilities for HK OpenAI MCP Servers"
 requires-python = ">=3.9"
 keywords = [ "mcp", "server", "utilities",]
 classifiers = [ "Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent",]
-dependencies = [ "pytest>=8.2.0", "pytest-cov>=6.1.1"]
+dependencies = [ "pytest>=8.2.0", "pytest-cov>=6.1.1", "requests>=2.31.0",]
 
 [[project.authors]]
 name = "Neo Chow"
@@ -20,7 +20,7 @@ Homepage = "https://github.com/hkopenai/hkopenai_common"
 "Bug Tracker" = "https://github.com/hkopenai/hkopenai_common/issues"
 
 [project.optional-dependencies]
-dev = [ "pytest>=7.0", "pytest-mock", "requests>=2.31.0",]
+dev = [ "pytest>=7.0", "pytest-mock",]
 
 [tool.pytest.ini_options]
 pythonpath = [ ".", "../..",]
