@@ -1,12 +1,11 @@
 [project]
 name = "hkopenai_common"
-version = "0.2.0"
+version = "0.3.0"
 description = "Common utilities for HK OpenAI MCP Servers"
 requires-python = ">=3.9"
 keywords = [ "mcp", "server", "utilities",]
 classifiers = [ "Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent",]
 dependencies = [ "pytest>=8.2.0", "pytest-cov>=6.1.1", "requests>=2.31.0",]
-
 [[project.authors]]
 name = "Neo Chow"
 email = "neo@01man.com"
