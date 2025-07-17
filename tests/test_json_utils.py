@@ -1,6 +1,9 @@
-import pytest
-from unittest.mock import patch, Mock
+"""Tests for the json_utils module."""
+
+from unittest.mock import Mock, patch
+
 import requests
+
 from hkopenai_common.json_utils import fetch_json_data
 
 # --- Tests for fetch_json_data ---
@@ -8,6 +11,7 @@ from hkopenai_common.json_utils import fetch_json_data
 
 @patch("requests.get")
 def test_fetch_json_data_success(mock_get):
+    """Test successful fetching and parsing of JSON data."""
     mock_response = Mock()
     mock_response.status_code = 200
     mock_response.json = Mock(return_value={"key": "value", "number": 123})
@@ -22,6 +26,7 @@ def test_fetch_json_data_success(mock_get):
 
 @patch("requests.get")
 def test_fetch_json_data_with_params_headers_timeout(mock_get):
+    """Test fetching JSON data with custom parameters, headers, and timeout."""
     mock_response = Mock()
     mock_response.status_code = 200
     mock_response.json = Mock(return_value={"status": "ok"})
@@ -41,6 +46,7 @@ def test_fetch_json_data_with_params_headers_timeout(mock_get):
 
 @patch("requests.get")
 def test_fetch_json_data_custom_encoding(mock_get):
+    """Test fetching JSON data with custom encoding."""
     mock_response = Mock()
     mock_response.status_code = 200
     # Simulate UTF-16 BE with BOM
@@ -56,6 +62,7 @@ def test_fetch_json_data_custom_encoding(mock_get):
 
 @patch("requests.get")
 def test_fetch_json_data_http_error(mock_get):
+    """Test fetching JSON data when an HTTP error occurs."""
     mock_response = Mock()
     mock_response.status_code = 500
     mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
@@ -74,6 +81,7 @@ def test_fetch_json_data_http_error(mock_get):
 
 @patch("requests.get")
 def test_fetch_json_data_connection_error(mock_get):
+    """Test fetching JSON data when a connection error occurs."""
     mock_get.side_effect = requests.exceptions.ConnectionError("Network unreachable")
 
     url = "http://example.com/data.json"
@@ -84,6 +92,7 @@ def test_fetch_json_data_connection_error(mock_get):
 
 @patch("requests.get")
 def test_fetch_json_data_timeout(mock_get):
+    """Test fetching JSON data when a timeout occurs."""
     mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
 
     url = "http://example.com/data.json"
@@ -94,6 +103,7 @@ def test_fetch_json_data_timeout(mock_get):
 
 @patch("requests.get")
 def test_fetch_json_data_invalid_json(mock_get):
+    """Test fetching JSON data when the response is not valid JSON."""
     mock_response = Mock()
     mock_response.status_code = 200
     mock_response.json = Mock(side_effect=ValueError("Invalid JSON"))
@@ -108,6 +118,7 @@ def test_fetch_json_data_invalid_json(mock_get):
 
 @patch("requests.get")
 def test_fetch_json_data_unicode_decode_error(mock_get):
+    """Test fetching JSON data when a UnicodeDecodeError occurs."""
     mock_response = Mock()
     mock_response.status_code = 200
     mock_response.json = Mock(side_effect=ValueError("Invalid JSON"))

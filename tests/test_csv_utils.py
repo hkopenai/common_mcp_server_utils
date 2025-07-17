@@ -1,6 +1,9 @@
-import pytest
-from unittest.mock import patch, Mock
+"""Tests for the csv_utils module."""
+
+from unittest.mock import Mock, patch
+
 import requests
+
 from hkopenai_common.csv_utils import fetch_csv_from_url
 
 # --- Tests for fetch_csv_from_url ---
@@ -8,6 +11,7 @@ from hkopenai_common.csv_utils import fetch_csv_from_url
 
 @patch("requests.get")
 def test_fetch_csv_from_url_success(mock_get):
+    """Test successful fetching and parsing of CSV data."""
     mock_response = Mock()
     mock_response.status_code = 200
     mock_response.content = b"header1,header2\nvalue1,value2\nvalue3,value4"
@@ -25,6 +29,7 @@ def test_fetch_csv_from_url_success(mock_get):
 
 @patch("requests.get")
 def test_fetch_csv_from_url_custom_encoding_delimiter(mock_get):
+    """Test fetching CSV data with custom encoding and delimiter."""
     mock_response = Mock()
     mock_response.status_code = 200
     # Simulate UTF-16 LE with BOM and tab delimiter
@@ -43,7 +48,8 @@ def test_fetch_csv_from_url_custom_encoding_delimiter(mock_get):
 
 
 @patch("requests.get")
-def test_fetch_csv_from_url_http_error(mock_get, capsys):
+def test_fetch_csv_from_url_http_error(mock_get):
+    """Test fetching CSV data when an HTTP error occurs."""
     mock_response = Mock()
     mock_response.status_code = 404
     mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
@@ -54,37 +60,38 @@ def test_fetch_csv_from_url_http_error(mock_get, capsys):
     url = "http://example.com/nonexistent.csv"
     data = fetch_csv_from_url(url)
 
-    assert data == []
-    captured = capsys.readouterr()
-    assert "HTTP error occurred" in captured.out
+    assert "error" in data
+    assert "HTTP error occurred" in data["error"]
+    assert "Status code: 404" in data["error"]
 
 
 @patch("requests.get")
-def test_fetch_csv_from_url_connection_error(mock_get, capsys):
+def test_fetch_csv_from_url_connection_error(mock_get):
+    """Test fetching CSV data when a connection error occurs."""
     mock_get.side_effect = requests.exceptions.ConnectionError("Network unreachable")
 
     url = "http://example.com/data.csv"
     data = fetch_csv_from_url(url)
 
-    assert data == []
-    captured = capsys.readouterr()
-    assert "Connection error occurred" in captured.out
+    assert "error" in data
+    assert "Connection error occurred" in data["error"]
 
 
 @patch("requests.get")
-def test_fetch_csv_from_url_timeout(mock_get, capsys):
+def test_fetch_csv_from_url_timeout(mock_get):
+    """Test fetching CSV data when a timeout occurs."""
     mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
 
     url = "http://example.com/data.csv"
     data = fetch_csv_from_url(url)
 
-    assert data == []
-    captured = capsys.readouterr()
-    assert "The request timed out" in captured.out
+    assert "error" in data
+    assert "The request timed out" in data["error"]
 
 
 @patch("requests.get")
-def test_fetch_csv_from_url_unicode_decode_error(mock_get, capsys):
+def test_fetch_csv_from_url_unicode_decode_error(mock_get):
+    """Test fetching CSV data when a UnicodeDecodeError occurs."""
     mock_response = Mock()
     mock_response.status_code = 200
     mock_response.content = b"invalid_bytes\xfe\xff"  # Invalid UTF-8
@@ -93,13 +100,13 @@ def test_fetch_csv_from_url_unicode_decode_error(mock_get, capsys):
     url = "http://example.com/data.csv"
     data = fetch_csv_from_url(url, encoding="utf-8")
 
-    assert data == []
-    captured = capsys.readouterr()
-    assert "UnicodeDecodeError" in captured.out
+    assert "error" in data
+    assert "UnicodeDecodeError" in data["error"]
 
 
 @patch("requests.get")
-def test_fetch_csv_from_url_csv_error(mock_get, capsys):
+def test_fetch_csv_from_url_csv_error(mock_get):
+    """Test fetching CSV data when a CSV parsing error occurs."""
     mock_response = Mock()
     mock_response.status_code = 200
     mock_response.content = b"header1,header2\nvalue1"  # Malformed CSV
@@ -108,6 +115,5 @@ def test_fetch_csv_from_url_csv_error(mock_get, capsys):
     url = "http://example.com/data.csv"
     data = fetch_csv_from_url(url)
 
-    assert data == []
-    captured = capsys.readouterr()
-    assert captured.out == ""
+    assert "error" in data
+    assert "Malformed CSV data" in data["error"]

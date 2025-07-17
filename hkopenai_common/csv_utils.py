@@ -6,9 +6,10 @@ from typing import List, Dict, Any, Optional
 
 def fetch_csv_from_url(
     url: str, encoding: str = "utf-8", delimiter: str = ","
-) -> List[Dict[str, Any]]:
+) -> List[Dict[str, Any]] | Dict[str, str]:
     """
     Fetches CSV data from a given URL and returns it as a list of dictionaries.
+    Returns a dictionary with an 'error' key if an error occurs.
 
     Args:
         url: The URL to fetch the CSV data from.
@@ -16,8 +17,8 @@ def fetch_csv_from_url(
         delimiter: The delimiter used in the CSV file (default: ",").
 
     Returns:
-        A list of dictionaries, where each dictionary represents a row in the CSV.
-        Returns an empty list if there's an error fetching or parsing the CSV.
+        A list of dictionaries, where each dictionary represents a row in the CSV,
+        or a dictionary with an 'error' key if an error occurs.
     """
     try:
         response = requests.get(url)
@@ -38,34 +39,33 @@ def fetch_csv_from_url(
             data = list(dict_reader)
             # Check for malformed rows (e.g., missing values)
             if data and any(None in row.values() for row in data):
-                return []  # Return empty list for malformed CSV as per test expectation
+                return {"error": f"Malformed CSV data from {url}"}
             return data
-        except csv.Error:
-            # Return empty list for malformed CSV as per test expectation, no print
-            return []
+        except csv.Error as e:
+            return {"error": f"Failed to parse CSV from {url}: {e}"}
 
     except requests.exceptions.HTTPError as http_err:
-        print(
-            f"HTTP error occurred while fetching CSV from {url}: {http_err}. "
+        return {
+            "error": f"HTTP error occurred while fetching CSV from {url}: {http_err}. "
             f"Status code: {response.status_code}. Response: {response.text}"
-        )
-        return []
+        }
     except requests.exceptions.ConnectionError as conn_err:
-        print(f"Connection error occurred while fetching CSV from {url}: {conn_err}.")
-        return []
+        return {
+            "error": f"Connection error occurred while fetching CSV from {url}: {conn_err}."
+        }
     except requests.exceptions.Timeout as timeout_err:
-        print(f"The request timed out while fetching CSV from {url}: {timeout_err}.")
-        return []
+        return {
+            "error": f"The request timed out while fetching CSV from {url}: {timeout_err}."
+        }
     except requests.exceptions.RequestException as req_err:
-        print(f"An unexpected error occurred during the request to {url}: {req_err}.")
-        return []
+        return {
+            "error": f"An unexpected error occurred during the request to {url}: {req_err}."
+        }
     except UnicodeDecodeError as decode_err:
-        print(
-            f"UnicodeDecodeError: Failed to decode CSV content from {url} "
+        return {
+            "error": f"UnicodeDecodeError: Failed to decode CSV content from {url} "
             f"with encoding {encoding}: {decode_err}. "
             "Try a different encoding (e.g., 'latin-1', 'utf-16')."
-        )
-        return []
+        }
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return []
+        return {"error": f"An unexpected error occurred: {e}"}
