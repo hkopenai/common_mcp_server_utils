@@ -22,4 +22,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         # Only block on fatal and error exit codes
-        pylint *.py tests/**/*.py --fail-under 5
+        pylint hkopenai_common/*.py tests/**/*.py --fail-under 5

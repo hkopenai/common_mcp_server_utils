@@ -1,6 +1,7 @@
 import requests
 import xml.etree.ElementTree as ET
 
+
 def fetch_xml_from_url(url: str):
     """
     Fetches XML data from a given URL and parses it.
@@ -20,6 +21,8 @@ def fetch_xml_from_url(url: str):
         response.raise_for_status()  # Raise an HTTPError for bad responses (4xx or 5xx)
         return ET.fromstring(response.content)
     except requests.exceptions.RequestException as e:
-        raise requests.exceptions.RequestException(f"Failed to fetch XML from {url}: {e}")
+        raise requests.exceptions.RequestException(
+            f"Failed to fetch XML from {url}: {e}"
+        )
     except ET.ParseError as e:
         raise ET.ParseError(f"Failed to parse XML from {url}: {e}")

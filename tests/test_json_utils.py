@@ -5,7 +5,8 @@ from hkopenai_common.json_utils import fetch_json_data
 
 # --- Tests for fetch_json_data ---
 
-@patch('requests.get')
+
+@patch("requests.get")
 def test_fetch_json_data_success(mock_get):
     mock_response = Mock()
     mock_response.status_code = 200
@@ -18,7 +19,8 @@ def test_fetch_json_data_success(mock_get):
     mock_get.assert_called_once_with(url, params=None, headers=None, timeout=None)
     assert data == {"key": "value", "number": 123}
 
-@patch('requests.get')
+
+@patch("requests.get")
 def test_fetch_json_data_with_params_headers_timeout(mock_get):
     mock_response = Mock()
     mock_response.status_code = 200
@@ -31,10 +33,13 @@ def test_fetch_json_data_with_params_headers_timeout(mock_get):
     timeout = 5
     data = fetch_json_data(url, params=params, headers=headers, timeout=timeout)
 
-    mock_get.assert_called_once_with(url, params=params, headers=headers, timeout=timeout)
+    mock_get.assert_called_once_with(
+        url, params=params, headers=headers, timeout=timeout
+    )
     assert data == {"status": "ok"}
 
-@patch('requests.get')
+
+@patch("requests.get")
 def test_fetch_json_data_custom_encoding(mock_get):
     mock_response = Mock()
     mock_response.status_code = 200
@@ -48,11 +53,14 @@ def test_fetch_json_data_custom_encoding(mock_get):
     mock_get.assert_called_once_with(url, params=None, headers=None, timeout=None)
     assert data == {"key": "value"}
 
-@patch('requests.get')
+
+@patch("requests.get")
 def test_fetch_json_data_http_error(mock_get):
     mock_response = Mock()
     mock_response.status_code = 500
-    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError("Internal Server Error")
+    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+        "Internal Server Error"
+    )
     mock_response.text = "Server Error"
     mock_get.return_value = mock_response
 
@@ -63,7 +71,8 @@ def test_fetch_json_data_http_error(mock_get):
     assert "Status code: 500" in data["error"]
     assert "Response: Server Error" in data["error"]
 
-@patch('requests.get')
+
+@patch("requests.get")
 def test_fetch_json_data_connection_error(mock_get):
     mock_get.side_effect = requests.exceptions.ConnectionError("Network unreachable")
 
@@ -72,7 +81,8 @@ def test_fetch_json_data_connection_error(mock_get):
 
     assert "Connection error occurred" in data["error"]
 
-@patch('requests.get')
+
+@patch("requests.get")
 def test_fetch_json_data_timeout(mock_get):
     mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
 
@@ -81,7 +91,8 @@ def test_fetch_json_data_timeout(mock_get):
 
     assert "The request timed out" in data["error"]
 
-@patch('requests.get')
+
+@patch("requests.get")
 def test_fetch_json_data_invalid_json(mock_get):
     mock_response = Mock()
     mock_response.status_code = 200
@@ -94,12 +105,13 @@ def test_fetch_json_data_invalid_json(mock_get):
 
     assert "Failed to parse JSON response from API" in data["error"]
 
-@patch('requests.get')
+
+@patch("requests.get")
 def test_fetch_json_data_unicode_decode_error(mock_get):
     mock_response = Mock()
     mock_response.status_code = 200
     mock_response.json = Mock(side_effect=ValueError("Invalid JSON"))
-    mock_response.content = b'\xed\xa0\x80' # Invalid UTF-8 sequence
+    mock_response.content = b"\xed\xa0\x80"  # Invalid UTF-8 sequence
     mock_get.return_value = mock_response
 
     url = "http://example.com/bad_encoding.json"

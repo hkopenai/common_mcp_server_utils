@@ -8,6 +8,7 @@ classifiers = [ "Programming Language :: Python :: 3", "License :: OSI Approved 
 [[project.authors]]
 name = "Neo Chow"
 email = "neo@01man.com"
+dependencies = [ "pytest>=8.2.0", "pytest-cov>=6.1.1"]
 
 [build-system]
 requires = [ "setuptools>=61.0",]

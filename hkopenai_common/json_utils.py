@@ -2,6 +2,7 @@ import requests
 import json
 from typing import Dict, Any, Optional
 
+
 def fetch_json_data(
     url: str,
     params: Optional[Dict[str, Any]] = None,
@@ -27,7 +28,7 @@ def fetch_json_data(
         except ValueError as e:
             # If response.json() fails, try manual decoding with BOM stripping
             try:
-                content = response.content.decode(encoding).lstrip('\ufeff')
+                content = response.content.decode(encoding).lstrip("\ufeff")
                 return json.loads(content)
             except UnicodeDecodeError as decode_err:
                 return {
@@ -60,6 +61,4 @@ def fetch_json_data(
             "error": f"The request timed out: {timeout_err}. Please try again later."
         }
     except requests.exceptions.RequestException as req_err:
-        return {
-            "error": f"An unexpected error occurred during the request: {req_err}."
-        }
+        return {"error": f"An unexpected error occurred during the request: {req_err}."}

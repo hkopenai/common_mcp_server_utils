@@ -3,6 +3,7 @@ import io
 import requests
 from typing import List, Dict, Any, Optional
 
+
 def fetch_csv_from_url(
     url: str, encoding: str = "utf-8", delimiter: str = ","
 ) -> List[Dict[str, Any]]:
@@ -25,19 +26,19 @@ def fetch_csv_from_url(
         # Use io.TextIOWrapper to handle encoding and BOM automatically
         csv_file = io.TextIOWrapper(io.BytesIO(response.content), encoding=encoding)
         reader = csv.reader(csv_file, delimiter=delimiter)
-        
+
         # Manually read header and strip BOM
         header = next(reader)
-        header = [h.lstrip('\ufeff') for h in header]
-        
+        header = [h.lstrip("\ufeff") for h in header]
+
         # Create DictReader with the cleaned header
         dict_reader = csv.DictReader(csv_file, fieldnames=header, delimiter=delimiter)
-        
+
         try:
             data = list(dict_reader)
             # Check for malformed rows (e.g., missing values)
             if data and any(None in row.values() for row in data):
-                return [] # Return empty list for malformed CSV as per test expectation
+                return []  # Return empty list for malformed CSV as per test expectation
             return data
         except csv.Error:
             # Return empty list for malformed CSV as per test expectation, no print
