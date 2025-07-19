@@ -38,34 +38,49 @@ def cleanup_env_vars():
 def test_cli_main_defaults():
     """Test cli_main with default arguments."""
     mock_server_main = Mock()
+    mock_server = Mock()
+    mock_server_main.return_value = mock_server
     cli_main(mock_server_main, "Test Server", args_list=[])
-    mock_server_main.assert_called_once_with(host="127.0.0.1", port=8000, sse=False)
+    mock_server_main.assert_called_once()
+    mock_server.run.assert_called_once_with()
 
 
 def test_cli_main_command_line_args_override_defaults():
     """Test cli_main when command line arguments override default values."""
     mock_server_main = Mock()
+    mock_server = Mock()
+    mock_server_main.return_value = mock_server
     cli_main(
         mock_server_main,
         "Test Server",
         args_list=["--host", "192.168.1.1", "-p", "9000", "-s"],
     )
-    mock_server_main.assert_called_once_with(host="192.168.1.1", port=9000, sse=True)
+    mock_server_main.assert_called_once()
+    mock_server.run.assert_called_once_with(
+        transport="streamable-http", host="192.168.1.1", port=9000
+    )
 
 
 def test_cli_main_env_vars_override_defaults():
     """Test cli_main when environment variables override default values."""
     mock_server_main = Mock()
+    mock_server = Mock()
+    mock_server_main.return_value = mock_server
     os.environ["TRANSPORT_MODE"] = "sse"
     os.environ["HOST"] = "0.0.0.0"
     os.environ["PORT"] = "7000"
     cli_main(mock_server_main, "Test Server", args_list=[])
-    mock_server_main.assert_called_once_with(host="0.0.0.0", port=7000, sse=True)
+    mock_server_main.assert_called_once()
+    mock_server.run.assert_called_once_with(
+        transport="streamable-http", host="0.0.0.0", port=7000
+    )
 
 
 def test_cli_main_command_line_args_override_env_vars():
     """Test cli_main when command line arguments override environment variables."""
     mock_server_main = Mock()
+    mock_server = Mock()
+    mock_server_main.return_value = mock_server
     os.environ["TRANSPORT_MODE"] = "sse"
     os.environ["HOST"] = "0.0.0.0"
     os.environ["PORT"] = "7000"
@@ -74,27 +89,43 @@ def test_cli_main_command_line_args_override_env_vars():
         "Test Server",
         args_list=["--host", "192.168.1.1", "-p", "9000"],
     )
-    mock_server_main.assert_called_once_with(host="192.168.1.1", port=9000, sse=True)
+    mock_server_main.assert_called_once()
+    mock_server.run.assert_called_once_with(
+        transport="streamable-http", host="192.168.1.1", port=9000
+    )
 
 
 def test_cli_main_invalid_port_env_var():
     """Test cli_main with an invalid port environment variable."""
     mock_server_main = Mock()
+    mock_server = Mock()
+    mock_server_main.return_value = mock_server
     os.environ["PORT"] = "invalid"
     cli_main(mock_server_main, "Test Server", args_list=[])
-    mock_server_main.assert_called_once_with(host="127.0.0.1", port=8000, sse=False)
+    mock_server_main.assert_called_once()
+    mock_server.run.assert_called_once_with()
 
 
 def test_cli_main_sse_env_var_only():
     """Test cli_main with SSE environment variable only."""
     mock_server_main = Mock()
+    mock_server = Mock()
+    mock_server_main.return_value = mock_server
     os.environ["TRANSPORT_MODE"] = "sse"
     cli_main(mock_server_main, "Test Server", args_list=[])
-    mock_server_main.assert_called_once_with(host="127.0.0.1", port=8000, sse=True)
+    mock_server_main.assert_called_once()
+    mock_server.run.assert_called_once_with(
+        transport="streamable-http", host="127.0.0.1", port=8000
+    )
 
 
 def test_cli_main_sse_command_line_only():
     """Test cli_main with SSE command line argument only."""
     mock_server_main = Mock()
+    mock_server = Mock()
+    mock_server_main.return_value = mock_server
     cli_main(mock_server_main, "Test Server", args_list=["-s"])
-    mock_server_main.assert_called_once_with(host="127.0.0.1", port=8000, sse=True)
+    mock_server_main.assert_called_once()
+    mock_server.run.assert_called_once_with(
+        transport="streamable-http", host="127.0.0.1", port=8000
+    )

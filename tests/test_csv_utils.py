@@ -117,3 +117,41 @@ def test_fetch_csv_from_url_csv_error(mock_get):
 
     assert "error" in data
     assert "Malformed CSV data" in data["error"]
+
+
+@patch("requests.get")
+def test_fetch_csv_from_url_with_title_row(mock_get):
+    """Test fetching CSV data with a title row that should be skipped."""
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.content = (
+        b"This is a title row\nheader1,header2\nvalue1,value2\nvalue3,value4"
+    )
+    mock_get.return_value = mock_response
+
+    url = "http://example.com/data_with_title.csv"
+    data = fetch_csv_from_url(url, has_title_row=True)
+
+    mock_get.assert_called_once_with(url)
+    assert data == [
+        {"header1": "value1", "header2": "value2"},
+        {"header1": "value3", "header2": "value4"},
+    ]
+
+
+@patch("requests.get")
+def test_fetch_csv_from_url_no_title_row(mock_get):
+    """Test fetching CSV data without a title row (default behavior)."""
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.content = b"header1,header2\nvalue1,value2\nvalue3,value4"
+    mock_get.return_value = mock_response
+
+    url = "http://example.com/data_no_title.csv"
+    data = fetch_csv_from_url(url)  # has_title_row defaults to False
+
+    mock_get.assert_called_once_with(url)
+    assert data == [
+        {"header1": "value1", "header2": "value2"},
+        {"header1": "value3", "header2": "value4"},
+    ]

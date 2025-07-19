@@ -5,7 +5,7 @@ from typing import List, Dict, Any, Optional
 
 
 def fetch_csv_from_url(
-    url: str, encoding: str = "utf-8", delimiter: str = ","
+    url: str, encoding: str = "utf-8", delimiter: str = ",", has_title_row: bool = False
 ) -> List[Dict[str, Any]] | Dict[str, str]:
     """
     Fetches CSV data from a given URL and returns it as a list of dictionaries.
@@ -27,6 +27,9 @@ def fetch_csv_from_url(
         # Use io.TextIOWrapper to handle encoding and BOM automatically
         csv_file = io.TextIOWrapper(io.BytesIO(response.content), encoding=encoding)
         reader = csv.reader(csv_file, delimiter=delimiter)
+
+        if has_title_row:
+            next(reader)  # Skip the title row
 
         # Manually read header and strip BOM
         header = next(reader)
